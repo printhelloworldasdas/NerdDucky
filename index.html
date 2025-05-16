@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NerdDucky</title>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <style>
+        /* Estilos generales */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            color: white;
+        }
+
+        /* Video/GIF de fondo */
+        #video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: blur(10px);
+            transition: filter 0.5s ease;
+        }
+
+        /* Pantalla de "Click to reveal" */
+        .preload-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            cursor: pointer;
+        }
+
+        .preload-text {
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+
+        /* Contenido principal */
+        .main-content {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            gap: 20px;
+            width: 400px; /* Ancho fijo para todos los elementos */
+            margin: 0 auto; /* Centrado horizontal */
+        }
+
+        /* Estilos comunes para todos los elementos */
+        .profile-card,
+        .discord-box,
+        .music-player {
+            width: 100%; /* Todos ocuparán el 100% del contenedor (400px) */
+            box-sizing: border-box; /* Incluye padding en el ancho total */
+        }
+
+        /* Tarjeta del perfil */
+        .profile-card {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            animation: fadeInUp 0.8s ease-out forwards;
+            overflow: hidden;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Banner */
+        .profile-banner {
+            width: 100%;
+            height: 130px;
+            object-fit: cover;
+        }
+
+        /* Foto de perfil */
+        .profile-pic-container {
+            margin-top: -70px;
+            margin-bottom: 20px;
+        }
+
+        .profile-pic {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #fff;
+            display: block;
+            margin: 0 auto;
+            transition: transform 0.3s;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.08);
+        }
+
+        /* Contenido de texto */
+        .profile-content {
+            padding: 0 30px 30px;
+        }
+
+        .profile-name {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Iconos de redes */
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 20px;
+        }
+
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 50%;
+            transition: transform 0.3s, filter 0.3s;
+        }
+
+        .social-icon:hover {
+            transform: scale(1.15);
+            filter: brightness(1.2) drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        }
+
+        .profile-description {
+            margin-bottom: 20px;
+            font-size: 15px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+
+        /* Rectángulo de Discord */
+        .discord-box {
+            display: flex;
+            align-items: center;
+            background: rgba(88, 101, 242, 0.8);
+            border-radius: 15px;
+            padding: 16px 25px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            text-decoration: none;
+            color: white;
+            transition: background 0.3s;
+            animation: fadeInUp 0.8s ease-out 0.3s forwards;
+        }
+
+        .discord-box:hover {
+            background: rgba(88, 101, 242, 1);
+        }
+
+        .discord-pic {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            margin-right: 18px;
+            border: 2px solid white;
+        }
+
+        .discord-info {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .discord-name {
+            font-weight: bold;
+            font-size: 19px;
+            margin-bottom: 3px;
+        }
+
+        .discord-label {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .discord-button {
+            background: white;
+            color: #5865F2;
+            border: none;
+            border-radius: 50px;
+            padding: 9px 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            white-space: nowrap;
+        }
+
+        .discord-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Reproductor de música simplificado */
+        .music-player {
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 15px 25px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            animation: fadeInUp 0.8s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+
+        .music-info {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .album-cover {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .song-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .song-artist {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: #5865F2;
+            border-radius: 5px;
+            width: 0%;
+        }
+
+        .time-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .play-pause {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            padding: 5px;
+        }
+
+        .play-pause:hover {
+            transform: scale(1.1);
+        }
+
+        .volume-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .volume-slider {
+            width: 80px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Video/GIF de fondo -->
+    <video id="video-background" autoplay muted loop>
+        <source src="images/background.mp4" type="video/mp4">
+    </video>
+
+    <!-- Audio (oculto) -->
+    <audio id="music-player" loop>
+        <source src="music/song.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <!-- Pantalla de "Click to reveal" -->
+    <div class="preload-screen">
+        <div class="preload-text">Click to reveal</div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Tarjeta de perfil -->
+            <div class="profile-card">
+                <img src="images/banner.jpg" class="profile-banner" alt="Banner de perfil">
+                <div class="profile-pic-container">
+                    <img src="images/profile.jpg" class="profile-pic" alt="Foto de perfil">
+                </div>
+                <div class="profile-content">
+                    <div class="profile-name">Test</div>
+                    <div class="social-icons">
+                        <a href="https://youtube.com/tuperfil" target="_blank">
+                            <img src="images/youtube.png" class="social-icon" alt="YouTube">
+                        </a>
+                        <a href="https://twitch.tv/tuperfil" target="_blank">
+                            <img src="images/twitch.png" class="social-icon" alt="Twitch">
+                        </a>
+                        <a href="https://vacban.wtf/tuperfil" target="_blank">
+                            <img src="images/vacban.png" class="social-icon" alt="VacBan">
+                        </a>
+                    </div>
+                    <div class="profile-description">
+                        Your user description goes here
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rectángulo de Discord -->
+            <a href="https://discord.gg/tuinvitacion" class="discord-box" target="_blank">
+                <img src="images/discord.jpg" class="discord-pic" alt="Discord">
+                <div class="discord-info">
+                    <div class="discord-name">TuNombreEnDiscord</div>
+                    <div class="discord-label">Únete a mi Discord</div>
+                </div>
+                <button class="discord-button">Entrar</button>
+            </a>
+
+            <!-- Reproductor de música simplificado -->
+            <div class="music-player">
+                <div class="music-info">
+                    <img src="images/album-cover.jpg" class="album-cover" alt="Portada del álbum">
+                    <div>
+                        <div class="song-title">Nombre de la Canción</div>
+                        <div class="song-artist">Artista</div>
+                    </div>
+                </div>
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="time-info">
+                    <span id="current-time">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+                <div class="controls">
+                    <button class="play-pause" id="play-button">▶</button>
+                    <div class="volume-container">
+                        <span>🔈</span>
+                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // Efecto "Click to reveal"
+        document.querySelector('.preload-screen').addEventListener('click', function() {
+            this.style.display = 'none';
+            document.querySelector('.main-content').style.opacity = '1';
+            document.getElementById('video-background').style.filter = 'blur(0)';
+            
+            // Iniciar la música automáticamente al hacer click
+            const audioPlayer = document.getElementById('music-player');
+            audioPlayer.volume = 0.5;
+            audioPlayer.play().catch(e => console.log("Autoplay prevented:", e));
+            
+            // Cambiar el botón a pausa
+            document.getElementById('play-button').textContent = '⏸';
+        });
+
+        // Animación del título (Im_Troller)
+        const titleText = "Im_Troller";
+        let currentIndex = 0;
+        let isDeleting = false;
+        const typingSpeed = 150;
+
+        function typeTitle() {
+            const currentTitle = titleText.slice(0, currentIndex) + "|";
+            document.title = currentTitle;
+
+            if (!isDeleting && currentIndex < titleText.length) {
+                currentIndex++;
+            } else if (isDeleting && currentIndex > 0) {
+                currentIndex--;
+            }
+
+            if (currentIndex === titleText.length && !isDeleting) {
+                setTimeout(() => isDeleting = true, 1000);
+            } else if (currentIndex === 0 && isDeleting) {
+                isDeleting = false;
+            }
+
+            setTimeout(typeTitle, isDeleting ? typingSpeed / 2 : typingSpeed);
+        }
+
+        typeTitle();
+
+        // Funcionalidad del reproductor de música
+        const audioPlayer = document.getElementById('music-player');
+        const playButton = document.getElementById('play-button');
+        const progressBar = document.getElementById('progress-bar');
+        const progressContainer = document.getElementById('progress-container');
+        const currentTimeElement = document.getElementById('current-time');
+        const durationElement = document.getElementById('duration');
+        const volumeSlider = document.getElementById('volume-slider');
+
+        // Actualizar la barra de progreso
+        audioPlayer.addEventListener('timeupdate', () => {
+            const { currentTime, duration } = audioPlayer;
+            const progressPercent = (currentTime / duration) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+            
+            // Formatear y mostrar el tiempo
+            currentTimeElement.textContent = formatTime(currentTime);
+            if (duration) {
+                durationElement.textContent = formatTime(duration);
+            }
+        });
+
+        // Click en la barra de progreso para saltar
+        progressContainer.addEventListener('click', (e) => {
+            const width = progressContainer.clientWidth;
+            const clickX = e.offsetX;
+            const duration = audioPlayer.duration;
+            audioPlayer.currentTime = (clickX / width) * duration;
+        });
+
+        // Control de volumen
+        volumeSlider.addEventListener('input', (e) => {
+            audioPlayer.volume = e.target.value;
+        });
+
+        // Botón play/pause
+        playButton.addEventListener('click', () => {
+            if (audioPlayer.paused) {
+                audioPlayer.play();
+                playButton.textContent = '⏸';
+            } else {
+                audioPlayer.pause();
+                playButton.textContent = '▶';
+            }
+        });
+
+        // Formatear tiempo (mm:ss)
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Actualizar duración cuando el metadata esté cargado
+        audioPlayer.addEventListener('loadedmetadata', () => {
+            durationElement.textContent = formatTime(audioPlayer.duration);
+        });
+    </script>
+</body>
+</html>
