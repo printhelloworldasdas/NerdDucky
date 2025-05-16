@@ -164,10 +164,8 @@
             line-height: 1.4;
         }
 
-        /* Rectángulo de Discord */
+        /* Rectángulo de Discord - Nuevo estilo con información dinámica */
         .discord-box {
-            display: flex;
-            align-items: center;
             background: rgba(88, 101, 242, 0.8);
             border-radius: 15px;
             padding: 16px 25px;
@@ -176,17 +174,26 @@
             color: white;
             transition: background 0.3s;
             animation: fadeInUp 0.8s ease-out 0.3s forwards;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            cursor: pointer;
         }
 
         .discord-box:hover {
             background: rgba(88, 101, 242, 1);
         }
 
+        .discord-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .discord-pic {
             width: 55px;
             height: 55px;
             border-radius: 50%;
-            margin-right: 18px;
             border: 2px solid white;
         }
 
@@ -201,25 +208,53 @@
             margin-bottom: 3px;
         }
 
-        .discord-label {
+        .discord-status {
+            display: flex;
+            align-items: center;
             font-size: 13px;
             opacity: 0.8;
         }
 
-        .discord-button {
-            background: white;
-            color: #5865F2;
-            border: none;
-            border-radius: 50px;
-            padding: 9px 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s;
-            white-space: nowrap;
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
         }
 
-        .discord-button:hover {
-            transform: scale(1.05);
+        .status-online {
+            background: #3ba55c;
+        }
+
+        .status-idle {
+            background: #faa61a;
+        }
+
+        .status-dnd {
+            background: #ed4245;
+        }
+
+        .status-offline {
+            background: #747f8d;
+        }
+
+        .discord-activity {
+            font-size: 14px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+
+        .activity-label {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .activity-image {
+            margin-top: 10px;
+            width: 100%;
+            border-radius: 10px;
+            display: none;
         }
 
         /* Reproductor de música simplificado */
@@ -353,20 +388,37 @@
                         </a>
                     </div>
                     <div class="profile-description">
-                        Your user description goes here
+                        Descripción personalizada aquí.
                     </div>
                 </div>
             </div>
 
-            <!-- Rectángulo de Discord -->
-            <a href="https://discord.gg/tuinvitacion" class="discord-box" target="_blank">
-                <img src="images/discord.jpg" class="discord-pic" alt="Discord">
-                <div class="discord-info">
-                    <div class="discord-name">TuNombreEnDiscord</div>
-                    <div class="discord-label">Únete a mi Discord</div>
+            <!-- Rectángulo de Discord con información dinámica -->
+            <div class="discord-box" id="discord-profile">
+                <div class="discord-header">
+                    <img id="discord-avatar" class="discord-pic" src="images/discord.jpg" alt="Discord Avatar">
+                    <div class="discord-info">
+                        <div class="discord-name" id="discord-username">Cargando...</div>
+                        <div class="discord-status">
+                            <div class="status-indicator" id="status-indicator"></div>
+                            <span id="discord-status-text">Estado: -</span>
+                        </div>
+                    </div>
                 </div>
-                <button class="discord-button">Entrar</button>
-            </a>
+
+                <div class="discord-activity">
+                    <div class="activity-label">Actividad:</div>
+                    <div id="discord-activity-name">-</div>
+                    <div id="discord-activity-time">Tiempo: -</div>
+                    <img id="activity-image" class="activity-image" src="" alt="">
+                </div>
+
+                <div class="discord-activity" id="spotify-section" style="display: none;">
+                    <div class="activity-label">Escuchando en Spotify:</div>
+                    <div id="discord-spotify-info">-</div>
+                    <img id="spotify-image" class="activity-image" src="" alt="">
+                </div>
+            </div>
 
             <!-- Reproductor de música simplificado -->
             <div class="music-player">
@@ -410,9 +462,12 @@
             
             // Cambiar el botón a pausa
             document.getElementById('play-button').textContent = '⏸';
+            
+            // Iniciar la carga del estado de Discord
+            fetchDiscordStatus();
         });
 
-        // Animación del título (NerdDucky)
+        // Animación del título (Im_Troller)
         const titleText = "NerdDucky";
         let currentIndex = 0;
         let isDeleting = false;
@@ -496,6 +551,123 @@
         audioPlayer.addEventListener('loadedmetadata', () => {
             durationElement.textContent = formatTime(audioPlayer.duration);
         });
+
+        // Funcionalidad para mostrar el estado de Discord
+        const userId = "1267769956573905010"; // Tu ID de Discord
+
+        function formatDuration(startTimestamp) {
+            const now = Date.now();
+            const diff = now - startTimestamp;
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            return `${minutes}m ${seconds}s`;
+        }
+
+        async function fetchDiscordStatus() {
+            try {
+                const res = await fetch(`https://api.lanyard.rest/v1/users/${userId}`);
+                const data = await res.json();
+
+                if (!data.success) return;
+
+                const d = data.data;
+
+                // Avatar
+                const avatarURL = `https://cdn.discordapp.com/avatars/${d.discord_user.id}/${d.discord_user.avatar}.png?size=128`;
+                document.getElementById("discord-avatar").src = avatarURL;
+
+                // Username
+                const username = `${d.discord_user.username}#${d.discord_user.discriminator}`;
+                document.getElementById("discord-username").textContent = username;
+
+                // Status
+                const statusText = {
+                    online: "En línea",
+                    idle: "Ausente",
+                    dnd: "No molestar",
+                    offline: "Desconectado"
+                };
+                
+                document.getElementById("discord-status-text").textContent = statusText[d.discord_status] || d.discord_status;
+                
+                // Actualizar indicador de estado
+                const statusIndicator = document.getElementById("status-indicator");
+                statusIndicator.className = "status-indicator";
+                statusIndicator.classList.add(`status-${d.discord_status}`);
+
+                // Activity (juego)
+                const game = d.activities.find(a => a.type === 0);
+                const gameImg = document.getElementById("activity-image");
+
+                if (game) {
+                    document.getElementById("discord-activity-name").textContent = game.name;
+                    if (game.timestamps?.start) {
+                        document.getElementById("discord-activity-time").textContent = `Desde hace: ${formatDuration(game.timestamps.start)}`;
+                    } else {
+                        document.getElementById("discord-activity-time").textContent = "Tiempo: desconocido";
+                    }
+
+                    // Game image from large_image
+                    if (game.assets?.large_image) {
+                        let imgKey = game.assets.large_image;
+                        if (imgKey.startsWith("mp:external")) {
+                            // If it's a hosted image (like YouTube or similar)
+                            gameImg.src = imgKey.replace(/^mp:/, "https:");
+                        } else {
+                            gameImg.src = `https://cdn.discordapp.com/app-assets/${game.application_id}/${imgKey}.png`;
+                        }
+                        gameImg.style.display = "block";
+                    } else {
+                        gameImg.style.display = "none";
+                    }
+
+                } else {
+                    document.getElementById("discord-activity-name").textContent = "No hay actividad";
+                    document.getElementById("discord-activity-time").textContent = "";
+                    gameImg.style.display = "none";
+                }
+
+                // Spotify info
+                const spotifySection = document.getElementById("spotify-section");
+                const spotifyImg = document.getElementById("spotify-image");
+
+                if (d.listening_to_spotify && d.spotify) {
+                    const song = `${d.spotify.song} - ${d.spotify.artist}`;
+                    document.getElementById("discord-spotify-info").textContent = song;
+                    spotifyImg.src = d.spotify.album_art_url;
+                    spotifyImg.style.display = "block";
+                    spotifySection.style.display = "block";
+                } else {
+                    spotifySection.style.display = "none";
+                    spotifyImg.style.display = "none";
+                }
+            } catch (error) {
+                console.error("Error al obtener el estado de Discord:", error);
+                document.getElementById("discord-username").textContent = "Error al cargar";
+                document.getElementById("discord-status-text").textContent = "Estado: desconocido";
+            }
+        }
+
+        // Redirigir al perfil de Discord al hacer clic
+        document.getElementById('discord-profile').addEventListener('click', function() {
+            window.open('https://discord.com/users/1267769956573905010', '_blank');
+        });
+
+        // Actualizar el estado cada 10 segundos si la página está visible
+        let statusInterval;
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible') {
+                fetchDiscordStatus();
+                statusInterval = setInterval(fetchDiscordStatus, 10000);
+            } else {
+                clearInterval(statusInterval);
+            }
+        });
+
+        // Iniciar el intervalo cuando la página carga (si no está en preload)
+        if (document.querySelector('.preload-screen').style.display === 'none') {
+            statusInterval = setInterval(fetchDiscordStatus, 10000);
+        }
     </script>
 </body>
-</html>
+    </html>
