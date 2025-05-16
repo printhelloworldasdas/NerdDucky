@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NerdDucky</title>
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
     <style>
-        /* Estilos generales */
+        /* General styles */
         body, html {
             margin: 0;
             padding: 0;
@@ -16,7 +16,7 @@
             color: white;
         }
 
-        /* Video/GIF de fondo */
+        /* Background video/GIF */
         #video-background {
             position: fixed;
             top: 0;
@@ -29,7 +29,7 @@
             transition: filter 0.5s ease;
         }
 
-        /* Pantalla de "Click to reveal" */
+        /* "Click to reveal" screen */
         .preload-screen {
             position: fixed;
             top: 0;
@@ -57,7 +57,7 @@
             100% { opacity: 0.6; }
         }
 
-        /* Contenido principal */
+        /* Main content */
         .main-content {
             opacity: 0;
             transition: opacity 0.5s ease;
@@ -70,19 +70,19 @@
             align-items: center;
             height: 100vh;
             gap: 20px;
-            width: 400px; /* Ancho fijo para todos los elementos */
-            margin: 0 auto; /* Centrado horizontal */
+            width: 400px; /* Fixed width for all elements */
+            margin: 0 auto; /* Horizontal centering */
         }
 
-        /* Estilos comunes para todos los elementos */
+        /* Common styles for all elements */
         .profile-card,
         .discord-box,
         .music-player {
-            width: 100%; /* Todos ocuparán el 100% del contenedor (400px) */
-            box-sizing: border-box; /* Incluye padding en el ancho total */
+            width: 100%; /* All elements will take 100% of container (400px) */
+            box-sizing: border-box; /* Includes padding in total width */
         }
 
-        /* Tarjeta del perfil */
+        /* Profile card */
         .profile-card {
             background: rgba(0, 0, 0, 0.7);
             border-radius: 20px;
@@ -104,7 +104,7 @@
             object-fit: cover;
         }
 
-        /* Foto de perfil */
+        /* Profile picture */
         .profile-pic-container {
             margin-top: -70px;
             margin-bottom: 20px;
@@ -125,7 +125,7 @@
             transform: scale(1.08);
         }
 
-        /* Contenido de texto */
+        /* Text content */
         .profile-content {
             padding: 0 30px 30px;
         }
@@ -136,7 +136,7 @@
             margin-bottom: 15px;
         }
 
-        /* Iconos de redes */
+        /* Social media icons */
         .social-icons {
             display: flex;
             justify-content: center;
@@ -164,7 +164,7 @@
             line-height: 1.4;
         }
 
-        /* Rectángulo de Discord - Nuevo estilo con información dinámica */
+        /* Discord box - New style with dynamic info */
         .discord-box {
             background: rgba(88, 101, 242, 0.8);
             border-radius: 15px;
@@ -257,7 +257,7 @@
             display: none;
         }
 
-        /* Reproductor de música simplificado */
+        /* Simplified music player */
         .music-player {
             background: rgba(0, 0, 0, 0.7);
             border-radius: 15px;
@@ -349,33 +349,33 @@
     </style>
 </head>
 <body>
-    <!-- Video/GIF de fondo -->
+    <!-- Background video/GIF -->
     <video id="video-background" autoplay muted loop>
         <source src="images/background.mp4" type="video/mp4">
     </video>
 
-    <!-- Audio (oculto) -->
+    <!-- Audio (hidden) -->
     <audio id="music-player" loop>
         <source src="music/song.mp3" type="audio/mpeg">
-        Tu navegador no soporta el elemento de audio.
+        Your browser does not support the audio element.
     </audio>
 
-    <!-- Pantalla de "Click to reveal" -->
+    <!-- "Click to reveal" screen -->
     <div class="preload-screen">
         <div class="preload-text">Click to reveal</div>
     </div>
 
-    <!-- Contenido principal -->
+    <!-- Main content -->
     <div class="main-content">
         <div class="container">
-            <!-- Tarjeta de perfil -->
+            <!-- Profile card -->
             <div class="profile-card">
-                <img src="images/banner.jpg" class="profile-banner" alt="Banner de perfil">
+                <img src="images/banner.jpg" class="profile-banner" alt="Profile banner">
                 <div class="profile-pic-container">
-                    <img src="images/profile.jpg" class="profile-pic" alt="Foto de perfil">
+                    <img src="images/profile.jpg" class="profile-pic" alt="Profile picture">
                 </div>
                 <div class="profile-content">
-                    <div class="profile-name">Test</div>
+                    <div class="profile-name">NerdDucky</div>
                     <div class="social-icons">
                         <a href="https://youtube.com/tuperfil" target="_blank">
                             <img src="images/youtube.png" class="social-icon" alt="YouTube">
@@ -388,45 +388,45 @@
                         </a>
                     </div>
                     <div class="profile-description">
-                        Descripción personalizada aquí.
+                        Custom description here.
                     </div>
                 </div>
             </div>
 
-            <!-- Rectángulo de Discord con información dinámica -->
+            <!-- Discord box with dynamic info -->
             <div class="discord-box" id="discord-profile">
                 <div class="discord-header">
                     <img id="discord-avatar" class="discord-pic" src="images/discord.jpg" alt="Discord Avatar">
                     <div class="discord-info">
-                        <div class="discord-name" id="discord-username">Cargando...</div>
+                        <div class="discord-name" id="discord-username">Loading...</div>
                         <div class="discord-status">
                             <div class="status-indicator" id="status-indicator"></div>
-                            <span id="discord-status-text">Estado: -</span>
+                            <span id="discord-status-text">Status: -</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="discord-activity">
-                    <div class="activity-label">Actividad:</div>
+                    <div class="activity-label">Activity:</div>
                     <div id="discord-activity-name">-</div>
-                    <div id="discord-activity-time">Tiempo: -</div>
+                    <div id="discord-activity-time">Time: -</div>
                     <img id="activity-image" class="activity-image" src="" alt="">
                 </div>
 
                 <div class="discord-activity" id="spotify-section" style="display: none;">
-                    <div class="activity-label">Escuchando en Spotify:</div>
+                    <div class="activity-label">Listening on Spotify:</div>
                     <div id="discord-spotify-info">-</div>
                     <img id="spotify-image" class="activity-image" src="" alt="">
                 </div>
             </div>
 
-            <!-- Reproductor de música simplificado -->
+            <!-- Simplified music player -->
             <div class="music-player">
                 <div class="music-info">
-                    <img src="images/album-cover.jpg" class="album-cover" alt="Portada del álbum">
+                    <img src="images/album-cover.jpg" class="album-cover" alt="Album cover">
                     <div>
-                        <div class="song-title">Nombre de la Canción</div>
-                        <div class="song-artist">Artista</div>
+                        <div class="song-title">Song Name</div>
+                        <div class="song-artist">Artist</div>
                     </div>
                 </div>
                 <div class="progress-container" id="progress-container">
@@ -449,25 +449,25 @@
 
     <!-- JavaScript -->
     <script>
-        // Efecto "Click to reveal"
+        // "Click to reveal" effect
         document.querySelector('.preload-screen').addEventListener('click', function() {
             this.style.display = 'none';
             document.querySelector('.main-content').style.opacity = '1';
             document.getElementById('video-background').style.filter = 'blur(0)';
             
-            // Iniciar la música automáticamente al hacer click
+            // Start music automatically on click
             const audioPlayer = document.getElementById('music-player');
             audioPlayer.volume = 0.5;
             audioPlayer.play().catch(e => console.log("Autoplay prevented:", e));
             
-            // Cambiar el botón a pausa
+            // Change button to pause
             document.getElementById('play-button').textContent = '⏸';
             
-            // Iniciar la carga del estado de Discord
+            // Start loading Discord status
             fetchDiscordStatus();
         });
 
-        // Animación del título (Im_Troller)
+        // Title animation (NerdDucky)
         const titleText = "NerdDucky";
         let currentIndex = 0;
         let isDeleting = false;
@@ -494,7 +494,7 @@
 
         typeTitle();
 
-        // Funcionalidad del reproductor de música
+        // Music player functionality
         const audioPlayer = document.getElementById('music-player');
         const playButton = document.getElementById('play-button');
         const progressBar = document.getElementById('progress-bar');
@@ -503,20 +503,20 @@
         const durationElement = document.getElementById('duration');
         const volumeSlider = document.getElementById('volume-slider');
 
-        // Actualizar la barra de progreso
+        // Update progress bar
         audioPlayer.addEventListener('timeupdate', () => {
             const { currentTime, duration } = audioPlayer;
             const progressPercent = (currentTime / duration) * 100;
             progressBar.style.width = `${progressPercent}%`;
             
-            // Formatear y mostrar el tiempo
+            // Format and display time
             currentTimeElement.textContent = formatTime(currentTime);
             if (duration) {
                 durationElement.textContent = formatTime(duration);
             }
         });
 
-        // Click en la barra de progreso para saltar
+        // Click on progress bar to skip
         progressContainer.addEventListener('click', (e) => {
             const width = progressContainer.clientWidth;
             const clickX = e.offsetX;
@@ -524,12 +524,12 @@
             audioPlayer.currentTime = (clickX / width) * duration;
         });
 
-        // Control de volumen
+        // Volume control
         volumeSlider.addEventListener('input', (e) => {
             audioPlayer.volume = e.target.value;
         });
 
-        // Botón play/pause
+        // Play/pause button
         playButton.addEventListener('click', () => {
             if (audioPlayer.paused) {
                 audioPlayer.play();
@@ -540,20 +540,20 @@
             }
         });
 
-        // Formatear tiempo (mm:ss)
+        // Format time (mm:ss)
         function formatTime(seconds) {
             const minutes = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
         }
 
-        // Actualizar duración cuando el metadata esté cargado
+        // Update duration when metadata is loaded
         audioPlayer.addEventListener('loadedmetadata', () => {
             durationElement.textContent = formatTime(audioPlayer.duration);
         });
 
-        // Funcionalidad para mostrar el estado de Discord
-        const userId = "1267769956573905010"; // Tu ID de Discord
+        // Functionality to show Discord status
+        const userId = "1267769956573905010"; // Your Discord ID
 
         function formatDuration(startTimestamp) {
             const now = Date.now();
@@ -582,29 +582,29 @@
 
                 // Status
                 const statusText = {
-                    online: "En línea",
-                    idle: "Ausente",
-                    dnd: "No molestar",
-                    offline: "Desconectado"
+                    online: "Online",
+                    idle: "Idle",
+                    dnd: "Do Not Disturb",
+                    offline: "Offline"
                 };
                 
                 document.getElementById("discord-status-text").textContent = statusText[d.discord_status] || d.discord_status;
                 
-                // Actualizar indicador de estado
+                // Update status indicator
                 const statusIndicator = document.getElementById("status-indicator");
                 statusIndicator.className = "status-indicator";
                 statusIndicator.classList.add(`status-${d.discord_status}`);
 
-                // Activity (juego)
+                // Activity (game)
                 const game = d.activities.find(a => a.type === 0);
                 const gameImg = document.getElementById("activity-image");
 
                 if (game) {
                     document.getElementById("discord-activity-name").textContent = game.name;
                     if (game.timestamps?.start) {
-                        document.getElementById("discord-activity-time").textContent = `Desde hace: ${formatDuration(game.timestamps.start)}`;
+                        document.getElementById("discord-activity-time").textContent = `For: ${formatDuration(game.timestamps.start)}`;
                     } else {
-                        document.getElementById("discord-activity-time").textContent = "Tiempo: desconocido";
+                        document.getElementById("discord-activity-time").textContent = "Time: unknown";
                     }
 
                     // Game image from large_image
@@ -622,7 +622,7 @@
                     }
 
                 } else {
-                    document.getElementById("discord-activity-name").textContent = "No hay actividad";
+                    document.getElementById("discord-activity-name").textContent = "No activity";
                     document.getElementById("discord-activity-time").textContent = "";
                     gameImg.style.display = "none";
                 }
@@ -642,18 +642,18 @@
                     spotifyImg.style.display = "none";
                 }
             } catch (error) {
-                console.error("Error al obtener el estado de Discord:", error);
-                document.getElementById("discord-username").textContent = "Error al cargar";
-                document.getElementById("discord-status-text").textContent = "Estado: desconocido";
+                console.error("Error fetching Discord status:", error);
+                document.getElementById("discord-username").textContent = "Load error";
+                document.getElementById("discord-status-text").textContent = "Status: unknown";
             }
         }
 
-        // Redirigir al perfil de Discord al hacer clic
+        // Redirect to Discord profile on click
         document.getElementById('discord-profile').addEventListener('click', function() {
             window.open('https://discord.com/users/1267769956573905010', '_blank');
         });
 
-        // Actualizar el estado cada 10 segundos si la página está visible
+        // Update status every 10 seconds if page is visible
         let statusInterval;
         document.addEventListener('visibilitychange', function() {
             if (document.visibilityState === 'visible') {
@@ -664,10 +664,10 @@
             }
         });
 
-        // Iniciar el intervalo cuando la página carga (si no está en preload)
+        // Start interval when page loads (if not in preload)
         if (document.querySelector('.preload-screen').style.display === 'none') {
             statusInterval = setInterval(fetchDiscordStatus, 10000);
         }
     </script>
 </body>
-    </html>
+</html>
