@@ -70,16 +70,16 @@
             align-items: center;
             height: 100vh;
             gap: 20px;
-            width: 400px; /* Fixed width for all elements */
-            margin: 0 auto; /* Horizontal centering */
+            width: 400px;
+            margin: 0 auto;
         }
 
         /* Common styles for all elements */
         .profile-card,
         .discord-box,
         .music-player {
-            width: 100%; /* All elements will take 100% of container (400px) */
-            box-sizing: border-box; /* Includes padding in total width */
+            width: 100%;
+            box-sizing: border-box;
         }
 
         /* Profile card */
@@ -164,7 +164,7 @@
             line-height: 1.4;
         }
 
-        /* Discord box - New style with dynamic info */
+        /* Discord box with dynamic info */
         .discord-box {
             background: rgba(88, 101, 242, 0.8);
             border-radius: 15px;
@@ -377,15 +377,15 @@
                 <div class="profile-content">
                     <div class="profile-name">NerdDucky</div>
                     <div class="social-icons">
-                        <a href="https://www.youtube.com/@ItsPro450" target="_blank">
+                        <a href="#" target="_blank">
                             <img src="images/youtube.png" class="social-icon" alt="YouTube">
                         </a>
-                        <a href="https://www.roblox.com/users/1363783050/profile" target="_blank">
+                        <a href="#" target="_blank">
                             <img src="images/roblox.png" class="social-icon" alt="Roblox">
                         </a>
                     </div>
                     <div class="profile-description">
-                        Good Evening, Afternoon Or Morning. I'm nerdducky or Blake. I'm an animator with 4 months of experience and occasionally upload content but mainly focus on Roblox (Life Is Roblox) and my social life. If ya need anything, DM my Discord.
+                        Good Evening, Afternoon Or Morning. I'm nerdducky or Blake. I'm an animator with 4 months of experience and occasionally upload content but mainly focus on Roblox (Life Is Roblox) and my social life. If you need anything, DM my Discord.
                     </div>
                 </div>
             </div>
@@ -608,7 +608,6 @@
                     if (game.assets?.large_image) {
                         let imgKey = game.assets.large_image;
                         if (imgKey.startsWith("mp:external")) {
-                            // If it's a hosted image (like YouTube or similar)
                             gameImg.src = imgKey.replace(/^mp:/, "https:");
                         } else {
                             gameImg.src = `https://cdn.discordapp.com/app-assets/${game.application_id}/${imgKey}.png`;
@@ -647,7 +646,7 @@
 
         // Redirect to Discord profile on click
         document.getElementById('discord-profile').addEventListener('click', function() {
-            window.open('https://discord.com/users/1267769956573905010', '_blank');
+            window.open('#', '_blank');
         });
 
         // Update status every 10 seconds if page is visible
