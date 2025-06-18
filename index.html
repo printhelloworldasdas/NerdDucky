@@ -16,7 +16,6 @@
             font-family: 'Poppins', sans-serif;
             overflow: hidden;
             color: white;
-            background-color: #000;
         }
 
         /* Background video/GIF */
@@ -28,7 +27,6 @@
             height: 100%;
             object-fit: cover;
             z-index: -1;
-            transition: filter 0.5s ease;
         }
 
         /* "Click to reveal" screen */
@@ -88,7 +86,7 @@
             color: #efe6e6;
             backdrop-filter: blur(10px);
             border-radius: 25px;
-            border: 1px solid #78726d20;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             position: relative;
             z-index: 2;
             opacity: 0;
@@ -186,15 +184,15 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            transition: transform 0.3s, filter 0.3s;
+            transition: all 0.3s ease;
             font-size: 24px;
             color: white;
-            background: rgba(255, 255, 255, 0.1);
+            text-decoration: none;
         }
 
         .social-icon:hover {
             transform: scale(1.15);
-            filter: brightness(1.2) drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
         }
 
         .profile-description {
@@ -347,12 +345,6 @@
             opacity: 0.7;
         }
 
-        .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
         .play-pause {
             background: none;
             border: none;
@@ -475,7 +467,6 @@
         document.querySelector('.preload-screen').addEventListener('click', function() {
             this.style.display = 'none';
             document.querySelector('.main-content').style.opacity = '1';
-            document.getElementById('video-background').style.filter = 'none'; // Mostrar fondo sin blur
             
             // Animate elements in
             document.querySelector('.profile-card').classList.add('animate-in');
