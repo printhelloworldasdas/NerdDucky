@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NerdDucky</title>
     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* General styles */
         body, html {
@@ -26,7 +28,6 @@
             height: 100%;
             object-fit: cover;
             z-index: -1;
-            filter: blur(10px);
             transition: filter 0.5s ease;
         }
 
@@ -181,9 +182,14 @@
         .social-icon {
             width: 45px;
             height: 45px;
-            object-fit: contain;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             border-radius: 50%;
             transition: transform 0.3s, filter 0.3s;
+            font-size: 24px;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .social-icon:hover {
@@ -269,6 +275,7 @@
             padding: 10px;
             background: rgba(0, 0, 0, 0.2);
             border-radius: 8px;
+            display: none; /* Oculto por defecto */
         }
 
         .activity-label {
@@ -360,17 +367,6 @@
             transform: scale(1.1);
         }
 
-        .volume-container {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .volume-slider {
-            width: 80px;
-            cursor: pointer;
-        }
-
         /* Import Poppins font */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
     </style>
@@ -406,11 +402,17 @@
                 <div class="profile-content">
                     <div class="profile-name">NerdDucky</div>
                     <div class="social-icons">
-                        <a href="#" target="_blank">
-                            <img src="images/youtube.png" class="social-icon" alt="YouTube">
+                        <a href="#" target="_blank" class="social-icon">
+                            <i class="fab fa-youtube"></i>
                         </a>
-                        <a href="#" target="_blank">
-                            <img src="images/roblox.png" class="social-icon" alt="Roblox">
+                        <a href="#" target="_blank" class="social-icon">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                        <a href="#" target="_blank" class="social-icon">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" target="_blank" class="social-icon">
+                            <i class="fab fa-roblox"></i>
                         </a>
                     </div>
                     <div class="profile-description">
@@ -432,14 +434,16 @@
                     </div>
                 </div>
 
-                <div class="discord-activity">
+                <!-- Activity section - hidden by default -->
+                <div class="discord-activity" id="activity-section">
                     <div class="activity-label">Activity:</div>
                     <div id="discord-activity-name">-</div>
                     <div id="discord-activity-time">Time: -</div>
                     <img id="activity-image" class="activity-image" src="" alt="">
                 </div>
 
-                <div class="discord-activity" id="spotify-section" style="display: none;">
+                <!-- Spotify section - hidden by default -->
+                <div class="discord-activity" id="spotify-section">
                     <div class="activity-label">Listening on Spotify:</div>
                     <div id="discord-spotify-info">-</div>
                     <img id="spotify-image" class="activity-image" src="" alt="">
@@ -471,7 +475,7 @@
         document.querySelector('.preload-screen').addEventListener('click', function() {
             this.style.display = 'none';
             document.querySelector('.main-content').style.opacity = '1';
-            document.getElementById('video-background').style.filter = 'blur(0)';
+            document.getElementById('video-background').style.filter = 'none'; // Mostrar fondo sin blur
             
             // Animate elements in
             document.querySelector('.profile-card').classList.add('animate-in');
@@ -612,12 +616,18 @@
                 statusIndicator.className = "status-indicator";
                 statusIndicator.classList.add(`status-${d.discord_status}`);
 
+                // Hide all activity sections by default
+                document.getElementById("activity-section").style.display = "none";
+                document.getElementById("spotify-section").style.display = "none";
+
                 // Activity (game)
                 const game = d.activities.find(a => a.type === 0);
                 const gameImg = document.getElementById("activity-image");
 
                 if (game) {
+                    document.getElementById("activity-section").style.display = "block";
                     document.getElementById("discord-activity-name").textContent = game.name;
+                    
                     if (game.timestamps?.start) {
                         document.getElementById("discord-activity-time").textContent = `For: ${formatDuration(game.timestamps.start)}`;
                     } else {
@@ -636,26 +646,17 @@
                     } else {
                         gameImg.style.display = "none";
                     }
-
-                } else {
-                    document.getElementById("discord-activity-name").textContent = "No activity";
-                    document.getElementById("discord-activity-time").textContent = "";
-                    gameImg.style.display = "none";
                 }
 
                 // Spotify info
-                const spotifySection = document.getElementById("spotify-section");
                 const spotifyImg = document.getElementById("spotify-image");
 
                 if (d.listening_to_spotify && d.spotify) {
+                    document.getElementById("spotify-section").style.display = "block";
                     const song = `${d.spotify.song} - ${d.spotify.artist}`;
                     document.getElementById("discord-spotify-info").textContent = song;
                     spotifyImg.src = d.spotify.album_art_url;
                     spotifyImg.style.display = "block";
-                    spotifySection.style.display = "block";
-                } else {
-                    spotifySection.style.display = "none";
-                    spotifyImg.style.display = "none";
                 }
             } catch (error) {
                 console.error("Error fetching Discord status:", error);
