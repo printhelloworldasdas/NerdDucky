@@ -11,9 +11,10 @@
             margin: 0;
             padding: 0;
             height: 100%;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             overflow: hidden;
             color: white;
+            background-color: #000;
         }
 
         /* Background video/GIF */
@@ -39,7 +40,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             z-index: 100;
             cursor: pointer;
         }
@@ -47,7 +50,7 @@
         .preload-text {
             font-size: 2rem;
             font-weight: bold;
-            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
             animation: pulse 2s infinite;
         }
 
@@ -66,12 +69,11 @@
         .container {
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            height: 100vh;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
             gap: 20px;
-            width: 400px;
-            margin: 0 auto;
         }
 
         /* Common styles for all elements */
@@ -79,17 +81,34 @@
         .discord-box,
         .music-player {
             width: 100%;
+            max-width: 600px;
             box-sizing: border-box;
+            background-color: rgba(20, 20, 23, 0.5);
+            color: #efe6e6;
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            border: 1px solid #78726d20;
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .profile-card.animate-in,
+        .discord-box.animate-in,
+        .music-player.animate-in {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         /* Profile card */
         .profile-card {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             animation: fadeInUp 0.8s ease-out forwards;
-            overflow: hidden;
         }
 
         @keyframes fadeInUp {
@@ -100,14 +119,28 @@
         /* Banner */
         .profile-banner {
             width: 100%;
-            height: 130px;
+            height: 200px;
+            margin-bottom: -95px;
+            position: relative;
+            overflow: hidden;
+            border-radius: 25px;
+            border-bottom-right-radius: 0px;
+            border-bottom-left-radius: 0px;
+        }
+
+        .profile-banner img {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
+            border-radius: 0;
         }
 
         /* Profile picture */
         .profile-pic-container {
             margin-top: -70px;
             margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .profile-pic {
@@ -128,6 +161,7 @@
         /* Text content */
         .profile-content {
             padding: 0 30px 30px;
+            text-align: center;
         }
 
         .profile-name {
@@ -166,22 +200,14 @@
 
         /* Discord box with dynamic info */
         .discord-box {
-            background: rgba(88, 101, 242, 0.8);
-            border-radius: 15px;
-            padding: 16px 25px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            padding: 20px;
             text-decoration: none;
             color: white;
-            transition: background 0.3s;
-            animation: fadeInUp 0.8s ease-out 0.3s forwards;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            animation: fadeInUp 0.8s ease-out 0.3s forwards;
             cursor: pointer;
-        }
-
-        .discord-box:hover {
-            background: rgba(88, 101, 242, 1);
         }
 
         .discord-header {
@@ -257,36 +283,33 @@
             display: none;
         }
 
-        /* Simplified music player */
+        /* Music player */
         .music-player {
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 15px;
-            padding: 15px 25px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 15px;
+            animation: fadeInUp 0.8s ease-out 0.5s forwards;
+        }
+
+        .song-cover {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .song-info {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            animation: fadeInUp 0.8s ease-out 0.5s forwards;
-            opacity: 0;
-        }
-
-        .music-info {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .album-cover {
-            width: 80px;
-            height: 80px;
-            border-radius: 10px;
-            object-fit: cover;
+            gap: 5px;
         }
 
         .song-title {
-            font-weight: bold;
             font-size: 16px;
-            margin-bottom: 5px;
+            font-weight: bold;
         }
 
         .song-artist {
@@ -297,14 +320,15 @@
         .progress-container {
             width: 100%;
             height: 5px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.3);
             border-radius: 5px;
             cursor: pointer;
+            margin: 5px 0;
         }
 
         .progress-bar {
             height: 100%;
-            background: #5865F2;
+            background: #fff;
             border-radius: 5px;
             width: 0%;
         }
@@ -326,7 +350,7 @@
             background: none;
             border: none;
             color: white;
-            font-size: 28px;
+            font-size: 24px;
             cursor: pointer;
             transition: transform 0.2s;
             padding: 5px;
@@ -346,6 +370,9 @@
             width: 80px;
             cursor: pointer;
         }
+
+        /* Import Poppins font */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
     </style>
 </head>
 <body>
@@ -370,7 +397,9 @@
         <div class="container">
             <!-- Profile card -->
             <div class="profile-card">
-                <img src="images/banner.jpg" class="profile-banner" alt="Profile banner">
+                <div class="profile-banner">
+                    <img src="images/banner.jpg" alt="Profile banner">
+                </div>
                 <div class="profile-pic-container">
                     <img src="images/profile.jpg" class="profile-pic" alt="Profile picture">
                 </div>
@@ -417,29 +446,21 @@
                 </div>
             </div>
 
-            <!-- Simplified music player -->
+            <!-- Music player -->
             <div class="music-player">
-                <div class="music-info">
-                    <img src="images/album-cover.jpg" class="album-cover" alt="Album cover">
-                    <div>
-                        <div class="song-title">Fast as Fuck</div>
-                        <div class="song-artist">Carter Vail</div>
+                <img src="images/album-cover.jpg" class="song-cover" alt="Album cover">
+                <div class="song-info">
+                    <div class="song-title">Fast as Fuck</div>
+                    <div class="song-artist">Carter Vail</div>
+                    <div class="progress-container" id="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <div class="time-info">
+                        <span id="current-time">0:00</span>
+                        <span id="duration">0:00</span>
                     </div>
                 </div>
-                <div class="progress-container" id="progress-container">
-                    <div class="progress-bar" id="progress-bar"></div>
-                </div>
-                <div class="time-info">
-                    <span id="current-time">0:00</span>
-                    <span id="duration">0:00</span>
-                </div>
-                <div class="controls">
-                    <button class="play-pause" id="play-button">▶</button>
-                    <div class="volume-container">
-                        <span>🔈</span>
-                        <input type="range" class="volume-slider" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
-                    </div>
-                </div>
+                <button class="play-pause" id="play-button">▶</button>
             </div>
         </div>
     </div>
@@ -451,6 +472,11 @@
             this.style.display = 'none';
             document.querySelector('.main-content').style.opacity = '1';
             document.getElementById('video-background').style.filter = 'blur(0)';
+            
+            // Animate elements in
+            document.querySelector('.profile-card').classList.add('animate-in');
+            document.querySelector('.discord-box').classList.add('animate-in');
+            document.querySelector('.music-player').classList.add('animate-in');
             
             // Start music automatically on click
             const audioPlayer = document.getElementById('music-player');
@@ -498,7 +524,6 @@
         const progressContainer = document.getElementById('progress-container');
         const currentTimeElement = document.getElementById('current-time');
         const durationElement = document.getElementById('duration');
-        const volumeSlider = document.getElementById('volume-slider');
 
         // Update progress bar
         audioPlayer.addEventListener('timeupdate', () => {
@@ -519,11 +544,6 @@
             const clickX = e.offsetX;
             const duration = audioPlayer.duration;
             audioPlayer.currentTime = (clickX / width) * duration;
-        });
-
-        // Volume control
-        volumeSlider.addEventListener('input', (e) => {
-            audioPlayer.volume = e.target.value;
         });
 
         // Play/pause button
